@@ -101,47 +101,57 @@
       </div>
     </div>
 
-    <figure class="figure">
+    <figure class="figure hero__demo">
       <div class="panel replay" id="hero-replay">
         <div class="replay__chrome">
           <span class="replay__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span class="grow">frozen replay · pair P2B841667E0D2 · answer model GPT-5.4</span>
+          <span class="grow">frozen replay · pair P2B841667E0D2</span>
+          <span class="replay__model">GPT-5.4</span>
         </div>
-        <div class="replay__body">
-          <div class="replay__pane">
-            <div class="query">
-              <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m11 11 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-              <span>Explain passport validity and blank-page requirements for international travel in plain English…</span>
-            </div>
-            <div class="mini-label"><span>Search call SC01, in array order</span></div>
-            <ol class="results" id="hero-results" aria-label="Five search results the model reads"></ol>
-            <div class="mini-label"><span>Target text, as the model reads it</span><span id="hero-words" class="num"></span></div>
-            <div class="snapshot" id="hero-snapshot" tabindex="0" aria-label="Target document text as serialized for the answer model"></div>
-          </div>
-          <div class="replay__pane">
-            <div class="mini-label"><span>Regenerated answer, excerpt</span></div>
-            <div class="answer" id="hero-answer" aria-live="polite"></div>
-            <div class="mini-label"><span>Citations across the whole answer</span></div>
-            <div class="tally" id="hero-tally"></div>
-          </div>
+        <div class="replay__q" title="Explain passport validity and blank-page requirements for international travel in plain English, focusing on the facts that most sources agree on and any important caveats.">
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m11 11 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <span>Explain passport validity and blank-page requirements…</span>
         </div>
-        <div class="replay__foot">
-          <div class="ctrl">
-            <span class="ctrl__label" id="hero-arm-label">Target rendering</span>
-            <div class="seg" role="group" aria-labelledby="hero-arm-label" id="hero-arm">
+
+        <section class="rstep" aria-labelledby="rs1">
+          <div class="rstep__head">
+            <span class="rstep__n" aria-hidden="true">1</span>
+            <span class="rstep__t" id="rs1">Change the target</span>
+            <div class="seg" role="group" aria-label="Target rendering" id="hero-arm">
               <button type="button" data-arm="P" aria-pressed="true">
                 <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 3h10M2 6h10M2 9h10M2 12h6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Prose</button>
               <button type="button" data-arm="S" aria-pressed="false">
                 <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2.5h7M4 6h8M4 9h8M4 12h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="2" cy="6" r=".9" fill="currentColor"/><circle cx="2" cy="9" r=".9" fill="currentColor"/><circle cx="2" cy="12" r=".9" fill="currentColor"/></svg>Structured</button>
             </div>
           </div>
-          <div class="compare" id="hero-compare" aria-hidden="true">
-            <div data-arm="P" class="is-on"><span class="k">Prose</span><span class="v num">target cited 0×</span></div>
-            <div data-arm="S"><span class="k">Structured</span><span class="v num">target cited 3×</span></div>
+          <div class="rdoc rdoc--C" id="hero-doc-c"></div>
+          <div class="rdoc rdoc--T" id="hero-doc-t">
+            <div class="rdoc__top" id="hero-doc-t-top"></div>
+            <div class="snapshot" id="hero-snapshot" tabindex="0" aria-label="Target page text exactly as serialized for the answer model"></div>
           </div>
-        </div>
+          <p class="rstep__note" id="hero-others"></p>
+        </section>
+
+        <section class="rstep" aria-labelledby="rs2">
+          <div class="rstep__head">
+            <span class="rstep__n" aria-hidden="true">2</span>
+            <span class="rstep__t" id="rs2">Regenerate the answer</span>
+            <span class="rstep__aside">rest of transcript identical</span>
+          </div>
+          <div class="answer" id="hero-answer" aria-live="polite"></div>
+        </section>
+
+        <section class="rstep" aria-labelledby="rs3">
+          <div class="rstep__head">
+            <span class="rstep__n" aria-hidden="true">3</span>
+            <span class="rstep__t" id="rs3">Count the credit</span>
+            <span class="rstep__aside num" id="hero-total"></span>
+          </div>
+          <div class="tally" id="hero-tally"></div>
+          <p class="rstep__note" id="hero-both"></p>
+        </section>
       </div>
-      <figcaption class="caption hero-caption">A real pair from the study. Two State Department pages state the same six-month rule. Only the target's rendering changes; every other byte of the transcript is identical and hash-verified. This is one of the clearest cases. Across all 113 pairs the average shift is <b>+0.50</b> target citations per answer.</figcaption>
+      <figcaption class="caption hero-caption">A real pair from the study: two State Department pages that state the same six-month rule. Only the target's rendering changes. This is one of the clearest cases; across all 113 pairs the average shift is <b>+0.50</b> target citations per answer.</figcaption>
     </figure>
   </div>
 </section>

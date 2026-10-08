@@ -2,57 +2,77 @@
 (function () {
   'use strict';
   var CC = window.CC;
+  var el = CC.el;
   var ex = CC.data && CC.data.examples && CC.data.examples.passport;
   var card = document.getElementById('hero-replay');
   if (!ex || !card) return;
 
-  var results = CC.$('#hero-results', card);
+  var docC = CC.$('#hero-doc-c', card);
+  var docT = CC.$('#hero-doc-t', card);
+  var topT = CC.$('#hero-doc-t-top', card);
   var snap = CC.$('#hero-snapshot', card);
-  var words = CC.$('#hero-words', card);
+  var others = CC.$('#hero-others', card);
   var answer = CC.$('#hero-answer', card);
+  var total = CC.$('#hero-total', card);
   var tally = CC.$('#hero-tally', card);
-  var compare = CC.$('#hero-compare', card);
+  var both = CC.$('#hero-both', card);
+
+  /* Archived order: competitor at #2, target at #3 (target lower). Only the target's text changes here. */
+  var cells = { P: ex.cells.PL, S: ex.cells.SL };
   var arm = 'P';
   var last = null;
 
-  /* The archived call: target at position 3, competitor at 2 (original order = target lower). */
-  var short = { t: 'After You Get Your New Passport', c: 'Passport services FAQ' };
+  function docTop(role, pos, title, dom, meta) {
+    return [
+      el('span', { class: 'rdoc__pos', text: '#' + pos }),
+      el('span', { class: 'rdoc__title', title: title + ' · ' + dom, text: title }),
+      meta,
+      CC.chip(role)
+    ];
+  }
+  var metaC = el('span', { class: 'rdoc__meta', text: 'never edited' });
+  var top = el('div', { class: 'rdoc__top' });
+  docTop('C', ex.c.pos, 'Passport services FAQ', ex.c.dom, metaC).forEach(function (n) { top.appendChild(n); });
+  docC.appendChild(top);
+  var metaT = el('span', { class: 'rdoc__meta' });
+  docTop('T', ex.t.pos, ex.t.title, ex.t.dom, metaT).forEach(function (n) { topT.appendChild(n); });
+
+  var rest = [];
   ex.call.forEach(function (dom, i) {
     var pos = i + 1;
-    var role = pos === ex.t.pos ? 'T' : pos === ex.c.pos ? 'C' : null;
-    var li = CC.el('li', { class: 'result' + (role ? ' result--' + role : ' result--dim') },
-      CC.el('span', { class: 'result__pos', text: '#' + pos }),
-      CC.el('span', { class: 'result__name' },
-        role ? CC.el('b', { text: role === 'T' ? short.t : short.c }) : null,
-        role ? ' · ' : '', dom),
-      role ? CC.chip(role) : CC.el('span'));
-    results.appendChild(li);
+    if (pos !== ex.t.pos && pos !== ex.c.pos) rest.push('#' + pos + ' ' + dom);
   });
+  others.textContent = 'Both are ' + ex.t.dom + ' pages from the same search call. Unchanged: ' + rest.join(' · ');
 
-  var rowT = CC.el('div', { class: 'tally__row' }, CC.el('span', { class: 'who' }, CC.el('i', { class: 'swatch swatch--T' }), 'Target'), CC.el('span', { class: 'units' }), CC.el('span', { class: 'n num' }));
-  var rowC = CC.el('div', { class: 'tally__row' }, CC.el('span', { class: 'who' }, CC.el('i', { class: 'swatch swatch--C' }), 'Competitor'), CC.el('span', { class: 'units' }), CC.el('span', { class: 'n num' }));
+  var rowT = el('div', { class: 'tally__row' }, el('span', { class: 'who' }, el('i', { class: 'swatch swatch--T' }), 'Target'), el('span', { class: 'units' }), el('span', { class: 'n num' }));
+  var rowC = el('div', { class: 'tally__row' }, el('span', { class: 'who' }, el('i', { class: 'swatch swatch--C' }), 'Competitor'), el('span', { class: 'units' }), el('span', { class: 'n num' }));
   tally.appendChild(rowT);
   tally.appendChild(rowC);
 
-  var cells = { P: ex.cells.PL, S: ex.cells.SL };
-  CC.$('[data-arm="P"] .v', compare).textContent = 'target cited ' + cells.P.t + '×';
-  CC.$('[data-arm="S"] .v', compare).textContent = 'target cited ' + cells.S.t + '×';
-
   function render(animate) {
     var cell = cells[arm];
-    var text = arm === 'S' ? ex.text.structured : ex.text.prose;
-    CC.snapshot(snap, text);
+    var structured = arm === 'S';
+    metaT.textContent = (structured ? 'structured · ' + ex.words.structured : 'prose · ' + ex.words.prose) + ' words';
+    CC.snapshot(snap, structured ? ex.text.structured : ex.text.prose);
     snap.scrollTop = 0;
-    words.textContent = (arm === 'S' ? ex.words.structured : ex.words.prose) + ' words';
     CC.clear(answer);
-    cell.lines.slice(0, 1).forEach(function (ln) {
-      answer.appendChild(CC.el('p', null, CC.rich(ln, { animate: animate })));
-    });
+    answer.appendChild(el('p', null, CC.rich(cell.lines[0], { animate: animate })));
+    total.textContent = cell.n + ' citations in this answer';
     CC.units(CC.$('.units', rowT), 'T', cell.t, animate && last ? last.t : null);
     CC.units(CC.$('.units', rowC), 'C', cell.c, animate && last ? Math.min(last.c, cell.c) : null);
     CC.$('.n', rowT).textContent = cell.t;
     CC.$('.n', rowC).textContent = cell.c;
-    CC.$$('[data-arm]', compare).forEach(function (d) { d.classList.toggle('is-on', d.getAttribute('data-arm') === arm); });
+    CC.clear(both);
+    var p = el('span', { text: 'prose ' + cells.P.t + '×' }), s = el('span', { text: 'structured ' + cells.S.t + '×' });
+    both.appendChild(document.createTextNode('Target cited: '));
+    both.appendChild(structured ? p : el('b', null, p));
+    both.appendChild(document.createTextNode(' → '));
+    both.appendChild(structured ? el('b', null, s) : s);
+    both.appendChild(document.createTextNode('. The competitor is cited either way.'));
+    if (animate && !CC.reduced()) {
+      docT.classList.add('is-flash');
+      setTimeout(function () { docT.classList.remove('is-flash'); }, 450);
+    }
     last = cell;
   }
 
@@ -78,7 +98,7 @@
           render(true);
         }, 1800);
       }
-    }, { threshold: 0.6 });
+    }, { threshold: 0.5 });
     io.observe(card);
   }
 })();
