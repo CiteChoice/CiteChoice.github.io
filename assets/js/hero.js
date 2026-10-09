@@ -26,7 +26,7 @@
     return [
       el('span', { class: 'rdoc__pos', text: '#' + pos }),
       el('span', { class: 'rdoc__title', title: title + ' · ' + dom, text: title }),
-      meta,
+      meta || el('span'),
       CC.chip(role)
     ];
   }
@@ -34,8 +34,9 @@
   var top = el('div', { class: 'rdoc__top' });
   docTop('C', ex.c.pos, 'Passport services FAQ', ex.c.dom, metaC).forEach(function (n) { top.appendChild(n); });
   docC.appendChild(top);
-  var metaT = el('span', { class: 'rdoc__meta' });
-  docTop('T', ex.t.pos, ex.t.title, ex.t.dom, metaT).forEach(function (n) { topT.appendChild(n); });
+  docTop('T', ex.t.pos, ex.t.title, ex.t.dom, null).forEach(function (n) { topT.appendChild(n); });
+  var labelT = el('div', { class: 'rdoc__label' });
+  docT.insertBefore(labelT, snap);
 
   var rest = [];
   ex.call.forEach(function (dom, i) {
@@ -49,10 +50,31 @@
   tally.appendChild(rowT);
   tally.appendChild(rowC);
 
+  /* Both outcomes side by side, so the result reads at rest; each row also switches the rendering. */
+  both.appendChild(el('span', { class: 'mini-label', text: 'Target citations, both renderings' }));
+  var cmpRows = [['P', 'Prose'], ['S', 'Structured']].map(function (a) {
+    var u = el('span', { class: 'units' });
+    CC.units(u, 'T', cells[a[0]].t, null);
+    var b = el('button', { type: 'button', class: 'hcmp__row', 'data-arm': a[0], 'aria-pressed': 'false', 'aria-label': a[1] + ' rendering: target cited ' + cells[a[0]].t + ' times' },
+      el('span', { text: a[1] }), u, el('span', { class: 'n', text: String(cells[a[0]].t) }));
+    b.addEventListener('click', function () {
+      if (arm === a[0]) return;
+      arm = a[0];
+      seg.set(function (o) { return o.getAttribute('data-arm') === arm; });
+      stopAuto();
+      render(true);
+    });
+    both.appendChild(b);
+    return b;
+  });
+  both.appendChild(el('p', { class: 'rstep__note', text: 'The competitor is cited in both: ' + cells.P.c + ' and ' + cells.S.c + ' times.' }));
+
   function render(animate) {
     var cell = cells[arm];
     var structured = arm === 'S';
-    metaT.textContent = (structured ? 'structured · ' + ex.words.structured : 'prose · ' + ex.words.prose) + ' words';
+    CC.clear(labelT);
+    labelT.appendChild(el('span', null, 'text the model reads: ', el('b', { text: structured ? 'structured rewrite' : 'prose rewrite' })));
+    labelT.appendChild(el('span', { text: (structured ? ex.words.structured : ex.words.prose) + ' words' }));
     CC.snapshot(snap, structured ? ex.text.structured : ex.text.prose);
     snap.scrollTop = 0;
     CC.clear(answer);
@@ -62,13 +84,7 @@
     CC.units(CC.$('.units', rowC), 'C', cell.c, animate && last ? Math.min(last.c, cell.c) : null);
     CC.$('.n', rowT).textContent = cell.t;
     CC.$('.n', rowC).textContent = cell.c;
-    CC.clear(both);
-    var p = el('span', { text: 'prose ' + cells.P.t + '×' }), s = el('span', { text: 'structured ' + cells.S.t + '×' });
-    both.appendChild(document.createTextNode('Target cited: '));
-    both.appendChild(structured ? p : el('b', null, p));
-    both.appendChild(document.createTextNode(' → '));
-    both.appendChild(structured ? el('b', null, s) : s);
-    both.appendChild(document.createTextNode('. The competitor is cited either way.'));
+    cmpRows.forEach(function (r) { r.setAttribute('aria-pressed', String(r.getAttribute('data-arm') === arm)); });
     if (animate && !CC.reduced()) {
       docT.classList.add('is-flash');
       setTimeout(function () { docT.classList.remove('is-flash'); }, 450);
