@@ -105,90 +105,19 @@
       </div>
     </div>
 
-    <figure class="figure hero__demo">
-      <div class="panel replay" id="hero-replay">
-        <div class="replay__chrome">
-          <span class="replay__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span class="grow">frozen replay · pair P2B841667E0D2 · one real pair from the study</span>
-          <span class="replay__model">GPT-5.4</span>
-        </div>
-        <div class="replay__bar">
-          <div class="replay__q" title="Explain passport validity and blank-page requirements for international travel in plain English, focusing on the facts that most sources agree on and any important caveats.">
-            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m11 11 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-            <span>Explain passport validity and blank-page requirements for international travel in plain English…</span>
-          </div>
-          <div class="ctrl">
-            <span class="ctrl__label" id="hero-arm-l">Target page</span>
-            <div class="seg" role="group" aria-labelledby="hero-arm-l" id="hero-arm">
-              <button type="button" data-arm="P" aria-pressed="true">
-                <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 3h10M2 6h10M2 9h10M2 12h6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Prose</button>
-              <button type="button" data-arm="S" aria-pressed="false">
-                <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2.5h7M4 6h8M4 9h8M4 12h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="2" cy="6" r=".9" fill="currentColor"/><circle cx="2" cy="9" r=".9" fill="currentColor"/><circle cx="2" cy="12" r=".9" fill="currentColor"/></svg>Structured</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="replay__steps">
-          <section class="rstep" aria-labelledby="rs1">
-            <div class="rstep__head">
-              <span class="rstep__n" aria-hidden="true">1</span>
-              <span class="rstep__t" id="rs1">Change the target</span>
-              <span class="rstep__aside">only its text changes</span>
-            </div>
-            <div class="rdoc rdoc--C" id="hero-doc-c"></div>
-            <div class="rdoc rdoc--T" id="hero-doc-t">
-              <div class="rdoc__top" id="hero-doc-t-top"></div>
-              <div class="snapshot" id="hero-snapshot" tabindex="0" aria-label="Target page text exactly as serialized for the answer model"></div>
-            </div>
-            <p class="rstep__note" id="hero-others"></p>
-          </section>
-
-          <section class="rstep" aria-labelledby="rs2">
-            <div class="rstep__head">
-              <span class="rstep__n" aria-hidden="true">2</span>
-              <span class="rstep__t" id="rs2">Regenerate the answer</span>
-              <span class="rstep__aside">rest of transcript byte-identical</span>
-            </div>
-            <div class="answer" id="hero-answer" aria-live="polite"></div>
-            <div class="legend hero-legend" aria-hidden="true"><span><span class="cite cite--C">C</span>competitor</span><span><span class="cite cite--T">T</span>target</span><span><span class="cite cite--O">·</span>another source</span></div>
-          </section>
-
-          <section class="rstep" aria-labelledby="rs3">
-            <div class="rstep__head">
-              <span class="rstep__n" aria-hidden="true">3</span>
-              <span class="rstep__t" id="rs3">Count the credit</span>
-              <span class="rstep__aside num" id="hero-total"></span>
-            </div>
-            <div class="tally" id="hero-tally"></div>
-            <div class="hcmp" id="hero-both" role="group" aria-label="Target citations under each rendering"></div>
-          </section>
-        </div>
+    <figure class="duo" id="hero-duo" aria-labelledby="duo-title">
+      <div class="duo__head">
+        <span class="eyebrow" id="duo-title">One real pair from the study</span>
+        <p>Two State Department pages state the same six-month passport rule. One of them was rewritten two ways with identical facts, and the answer was regenerated each time.</p>
       </div>
-      <figcaption class="caption hero-caption">Two State Department pages state the same six-month rule. Flip the target between prose and structured: nothing else in the transcript changes. This is one of the clearest pairs; across all 113 the average shift is <b>+0.50</b> target citations per answer.</figcaption>
-    </figure>
-  </div>
-</section>
-
-        <section class="rstep" aria-labelledby="rs2">
-          <div class="rstep__head">
-            <span class="rstep__n" aria-hidden="true">2</span>
-            <span class="rstep__t" id="rs2">Regenerate the answer</span>
-            <span class="rstep__aside">rest of transcript identical</span>
-          </div>
-          <div class="answer" id="hero-answer" aria-live="polite"></div>
-        </section>
-
-        <section class="rstep" aria-labelledby="rs3">
-          <div class="rstep__head">
-            <span class="rstep__n" aria-hidden="true">3</span>
-            <span class="rstep__t" id="rs3">Count the credit</span>
-            <span class="rstep__aside num" id="hero-total"></span>
-          </div>
-          <div class="tally" id="hero-tally"></div>
-          <div class="hcmp" id="hero-both" role="group" aria-label="Target citations under each rendering"></div>
-        </section>
+      <div class="duo__grid">
+        <article class="duo__card" data-arm="P"></article>
+        <article class="duo__card" data-arm="S"></article>
       </div>
-      <figcaption class="caption hero-caption">A real pair from the study: two State Department pages that state the same six-month rule. Only the target's rendering changes. This is one of the clearest cases; across all 113 pairs the average shift is <b>+0.50</b> target citations per answer.</figcaption>
+      <div class="duo__bottom">
+        <figcaption class="duo__foot">Nothing else in the frozen search transcript changed. This is one of the clearest pairs; across all 113, structure adds <b>+0.50</b> citations per answer on average.</figcaption>
+        <button type="button" class="duo__more" id="duo-more" aria-expanded="false" aria-controls="hero-duo">Read both versions in full</button>
+      </div>
     </figure>
   </div>
 </section>
